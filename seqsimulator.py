@@ -144,6 +144,9 @@ class SeqSimulator:
     def generate_random_variants(self, sample_id: str, output_vcf: Path, var_config: Dict):
         """Generate random variants based on configuration"""
         import pysam
+        import pysam
+        import random
+        import subprocess
         
         ref = pysam.FastaFile(self.config['reference_genome'])
         
