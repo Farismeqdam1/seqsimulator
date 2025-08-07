@@ -19,7 +19,7 @@ A comprehensive, modular tool for simulating both short-read and long-read seque
 #### Method 1: Direct Installation
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/seqsimulator.git
+git clone https://github.com/Farismeqdam1/seqsimulator.git
 cd seqsimulator
 
 # Install Python dependencies
