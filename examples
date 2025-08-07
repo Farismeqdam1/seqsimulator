@@ -1,0 +1,277 @@
+# ============================================
+# EXAMPLE 1: whole_genome_30x.yaml
+# ============================================
+# Whole genome sequencing at 30x coverage
+simulation_type: short_read
+reference_genome: /path/to/hg38.fa
+output_directory: ./wgs_30x_output
+num_samples: 5
+sample_prefix: WGS
+
+short_read_config:
+  coverage: 30
+  read_length: 150
+  insert_size: 350
+  insert_sd: 50
+
+short_read_simulator: art
+
+variant_config:
+  snp_rate: 0.001
+  indel_rate: 0.0001
+  sv_rate: 0.00001
+
+threads: 8
+
+# ============================================
+# EXAMPLE 2: targeted_panel.yaml
+# ============================================
+# Targeted gene panel simulation
+simulation_type: short_read
+reference_genome: /path/to/gene_panel.fa  # Pre-extracted target regions
+output_directory: ./panel_output
+num_samples: 100
+sample_prefix: PANEL
+
+short_read_config:
+  coverage: 500  # High coverage for clinical panels
+  read_length: 150
+  insert_size: 250
+  insert_sd: 30
+
+variant_config:
+  # Use known pathogenic variants
+  population_vcf: /path/to/clinvar_pathogenic.vcf.gz
+  
+threads: 16
+
+# ============================================
+# EXAMPLE 3: ont_long_reads.yaml
+# ============================================
+# Oxford Nanopore long-read simulation
+simulation_type: long_read
+reference_genome: /path/to/hg38.fa
+output_directory: ./ont_output
+num_samples: 3
+sample_prefix: ONT
+
+long_read_config:
+  coverage: 40
+  mean_length: 15000
+  error_rate: 0.05  # 5% error rate for newer ONT
+  platform: ont
+
+long_read_simulator: badread
+
+variant_config:
+  snp_rate: 0.001
+  indel_rate: 0.0002  # Higher indel rate for long reads
+  sv_rate: 0.0001     # Better SV detection
+
+chromosomes:  # Simulate specific chromosomes
+  - chr1
+  - chr2
+  - chr3
+
+# ============================================
+# EXAMPLE 4: pacbio_hifi.yaml
+# ============================================
+# PacBio HiFi simulation
+simulation_type: long_read
+reference_genome: /path/to/hg38.fa
+output_directory: ./hifi_output
+num_samples: 2
+sample_prefix: HIFI
+
+long_read_config:
+  coverage: 30
+  mean_length: 20000
+  error_rate: 0.001  # Very low error for HiFi
+  platform: pacbio
+
+long_read_simulator: pbsim
+
+variant_config:
+  population_vcf: /path/to/1000G_phase3.vcf.gz
+
+# ============================================
+# EXAMPLE 5: hybrid_sequencing.yaml
+# ============================================
+# Combined short and long read simulation
+simulation_type: hybrid
+reference_genome: /path/to/hg38.fa
+output_directory: ./hybrid_output
+num_samples: 10
+sample_prefix: HYBRID
+
+short_read_config:
+  coverage: 30
+  read_length: 150
+  insert_size: 350
+  insert_sd: 50
+
+long_read_config:
+  coverage: 15
+  mean_length: 10000
+  error_rate: 0.1
+  platform: ont
+
+short_read_simulator: art
+long_read_simulator: badread
+
+variant_config:
+  snp_rate: 0.001
+  indel_rate: 0.0001
+  sv_rate: 0.00005
+
+threads: 16
+
+# ============================================
+# EXAMPLE 6: trio_analysis.yaml
+# ============================================
+# Family trio with inheritance
+simulation_type: short_read
+reference_genome: /path/to/hg38.fa
+output_directory: ./trio_output
+num_samples: 3
+sample_prefix: FAM001
+
+# Custom sample names for trio
+sample_names:
+  - FAM001_father
+  - FAM001_mother
+  - FAM001_proband
+
+short_read_config:
+  coverage: 40
+  read_length: 150
+  insert_size: 350
+
+variant_config:
+  # Start with population variants
+  population_vcf: /path/to/gnomad.vcf.gz
+  
+  # Add de novo mutations for proband
+  de_novo_rate: 1.0e-8
+  
+  # Inheritance pattern
+  inheritance_mode: mendelian
+
+# Pedigree information
+pedigree_config:
+  ped_file: trio.ped
+  
+threads: 12
+
+# ============================================
+# EXAMPLE 7: cancer_tumor_normal.yaml
+# ============================================
+# Tumor-normal pair simulation
+simulation_type: short_read
+reference_genome: /path/to/hg38.fa
+output_directory: ./cancer_output
+num_samples: 2
+
+# Define tumor and normal samples
+samples:
+  - name: PATIENT001_normal
+    variant_config:
+      snp_rate: 0.001
+      indel_rate: 0.0001
+    coverage: 30
+    
+  - name: PATIENT001_tumor
+    variant_config:
+      snp_rate: 0.001
+      indel_rate: 0.0001
+      # Additional somatic mutations
+      somatic_snv_rate: 0.0001
+      somatic_indel_rate: 0.00001
+      # Tumor purity and ploidy
+      purity: 0.7
+      ploidy: 3.2
+    coverage: 60  # Higher coverage for tumor
+
+short_read_config:
+  read_length: 150
+  insert_size: 350
+
+# ============================================
+# EXAMPLE 8: rna_seq.yaml
+# ============================================
+# RNA-seq simulation (requires transcriptome reference)
+simulation_type: short_read
+reference_genome: /path/to/transcriptome.fa
+output_directory: ./rnaseq_output
+num_samples: 6
+sample_prefix: RNA
+
+short_read_config:
+  coverage: 50  # In terms of transcriptome coverage
+  read_length: 100
+  insert_size: 200
+  insert_sd: 20
+
+# Expression profile
+expression_config:
+  profile_file: expression_profile.txt
+  differential_expression:
+    - sample_group: control
+      samples: [1, 2, 3]
+    - sample_group: treatment
+      samples: [4, 5, 6]
+      fold_change_file: de_genes.txt
+
+short_read_simulator: art
+
+# ============================================
+# EXAMPLE 9: metagenome.yaml
+# ============================================
+# Metagenomic simulation
+simulation_type: hybrid
+reference_genome: /path/to/metagenome_refs/  # Directory with multiple genomes
+output_directory: ./metagenome_output
+num_samples: 4
+sample_prefix: META
+
+# Community composition
+community_config:
+  abundance_file: community_abundance.txt  # Species and their abundances
+  total_coverage: 100
+  
+short_read_config:
+  read_length: 150
+  insert_size: 350
+
+long_read_config:
+  mean_length: 5000
+  error_rate: 0.12
+  platform: ont
+
+# ============================================
+# EXAMPLE 10: low_coverage_screening.yaml
+# ============================================
+# Low-pass whole genome for screening
+simulation_type: short_read
+reference_genome: /path/to/hg38.fa
+output_directory: ./lowpass_output
+num_samples: 100
+sample_prefix: SCREEN
+
+short_read_config:
+  coverage: 5  # Low coverage
+  read_length: 150
+  insert_size: 500  # Larger insert for better coverage
+  insert_sd: 50
+
+variant_config:
+  # Focus on common variants
+  population_vcf: /path/to/common_variants.vcf.gz
+  maf_threshold: 0.01  # Only variants with MAF > 1%
+
+threads: 24
+
+# Fast mode - skip BAM generation
+advanced:
+  generate_bam: false
+  compress_fastq: true
