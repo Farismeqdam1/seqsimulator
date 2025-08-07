@@ -353,27 +353,7 @@ If you use SeqSimulator in your research, please cite:
   title = {SeqSimulator: A modular tool for sequencing data simulation},
   author = {SeqSim Development Team},
   year = {2024},
-  url = {https://github.com/yourusername/seqsimulator}
+  url = {https://github.com/Farismeqdam1/seqsimulator}
 }
 ```
 
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## Support
-
-- **Documentation**: [https://seqsimulator.readthedocs.io](https://seqsimulator.readthedocs.io)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/seqsimulator/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/seqsimulator/discussions)
-- **Email**: support@seqsimulator.org
-
-## Acknowledgments
-
-SeqSimulator integrates several excellent tools:
-- [ART](https://www.niehs.nih.gov/research/resources/software/biostatistics/art/)
-- [DWGSIM](https://github.com/nh13/DWGSIM)
-- [Badread](https://github.com/rrwick/Badread)
-- [PBSIM](https://github.com/yukiteruono/pbsim3)
-- [SAMtools](http://www.htslib.org/)
-- [BCFtools](http://www.htslib.org/)
