@@ -203,3 +203,50 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         wget -q https://github.com/yukiteruono/pbsim3/releases/download/v3.0.0/pbsim3-3.0.0-Linux.tar.gz
         tar -xzf pbsim3-3.0.0-Linux.tar.gz
         cp pbsim3-3.0.0-Linux/pbsim3 "$TOOLS_DIR/bin/"
+        rm -rf pbsim3*
+    else
+        echo "PBSIM3 already installed"
+    fi
+fi
+
+# Add tools to PATH
+echo ""
+echo "========================================="
+echo "Installation Complete!"
+echo "========================================="
+echo ""
+echo "Add the following line to your ~/.bashrc or ~/.bash_profile:"
+echo ""
+echo "export PATH=\"$TOOLS_DIR/bin:\$PATH\""
+echo ""
+echo "Then run: source ~/.bashrc"
+echo ""
+echo "Or for immediate use, run:"
+echo "export PATH=\"$TOOLS_DIR/bin:\$PATH\""
+echo ""
+
+# Verify installations
+echo "Verifying installations..."
+echo ""
+
+# Check each tool
+tools=("samtools" "bcftools" "bwa" "minimap2" "art_illumina" "dwgsim")
+for tool in "${tools[@]}"; do
+    if command_exists "$tool" || [ -f "$TOOLS_DIR/bin/$tool" ]; then
+        echo "✓ $tool installed"
+    else
+        echo "✗ $tool not found"
+    fi
+done
+
+# Check Python packages
+echo ""
+echo "Python packages:"
+python3 -c "import yaml; print('✓ PyYAML installed')" 2>/dev/null || echo "✗ PyYAML not found"
+python3 -c "import pysam; print('✓ pysam installed')" 2>/dev/null || echo "✗ pysam not found"
+python3 -c "import numpy; print('✓ numpy installed')" 2>/dev/null || echo "✗ numpy not found"
+python3 -c "import Bio; print('✓ biopython installed')" 2>/dev/null || echo "✗ biopython not found"
+python3 -c "import badread; print('✓ badread installed')" 2>/dev/null || echo "✗ badread not found"
+
+echo ""
+echo "Installation script completed!"
